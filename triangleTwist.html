@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+mat4 twistMatrix;
+uniform float theta;
+float distanceTheta;
+float distanceFromOrigin;
+
+void main()
+{
+
+    distanceFromOrigin = sqrt(pow(vPosition.x,2.0) + pow(vPosition.y, 2.0));
+    distanceTheta= distanceFromOrigin * theta;
+
+    // twistMatrix = mat4(1.0);
+    
+    twistMatrix = mat4(
+                  cos(distanceTheta), sin(distanceTheta), 0.0 , 0.0,
+                  -sin(distanceTheta), cos(distanceTheta), 0.0, 0.0,
+                  0.0         ,    0.0      , 0.0, 0.0,
+                  0.0         ,    0.0      , 0.0, 1.0);
+
+    gl_Position = twistMatrix * vPosition;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+
+uniform vec4 vFragColor;
+void main()
+{
+
+    gl_FragColor = vFragColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="triangleTwist.js"></script>
+</head>
+
+<body>
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<div><p>
+Tessalation
+<input id="sliderDiv" type="range" min="0" max="8" value="5" steps="1"/>
+<span id="range">5</span>
+<script type="text/javascript">
+function showValue(newValue)
+{
+   document.getElementById("range").innerHTML=newValue;
+}
+</script>
+</div>
+</p>
+
+<div><p>
+Twist
+
+0<input id="sliderTheta" type="range" min="0" max="4.0" value="1.0" steps="0.2"/>
+<script type="text/javascript">
+
+</script>
+4.0
+</div>
+</p>
+
+<p>
+
+<button id= "triButton">Triangle</button>
+<button id= "sqButton">Square</button>
+<button id= "losButton">Diamond</button>
+
+</p>
+
+</body>
+</html>
