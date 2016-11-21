@@ -7,6 +7,8 @@ var theta = 1.0;
 var thetaLoc;
 var vFragColor;
 var shape = 1;
+var lines = true;
+var tTriangle = true;
 
 function triangle(a , b, c)
 {
@@ -70,7 +72,9 @@ function recursiveTriangles(verticesTriangle, iterations){
    iterations = iterations - 1;
 
 
-   recursiveTriangles(middleTriangle(verticesTriangle[0],verticesTriangle[1],verticesTriangle[2]), iterations);
+   if(tTriangle){
+     recursiveTriangles(middleTriangle(verticesTriangle[0],verticesTriangle[1],verticesTriangle[2]), iterations);
+   }
 
    recursiveTriangles(divideTriangle(verticesTriangle[1],verticesTriangle[0],verticesTriangle[2]), iterations);
 
@@ -193,6 +197,17 @@ window.onload = function init()
       points = [];
       init();
    }
+   document.getElementById( "lines" ).onclick = function () {
+      lines = !lines;
+      init();
+   }
+
+   document.getElementById( "triangle" ).onclick = function () {
+      tTriangle = !tTriangle;
+      points = [];
+      init();
+   }
+
 
 
    render();
@@ -206,10 +221,12 @@ function render() {
    gl.drawArrays( gl.TRIANGLES ,0,points.length);
    
    window.requestAnimFrame(render);
-   gl.lineWidth(1.2);
-   gl.uniform4fv(vFragColor,[0,0,0,1]);
-   for (var i = 0; i*3 < points.length; i++){
-      gl.drawArrays( gl.LINE_LOOP, i*3,3);
+   if(lines){
+      gl.lineWidth(1.2);
+      gl.uniform4fv(vFragColor,[0,0,0,1]);
+      for (var i = 0; i*3 < points.length; i++){
+         gl.drawArrays( gl.LINE_LOOP, i*3,3);
+      }
    }
 
 }
